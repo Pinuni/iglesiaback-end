@@ -6,7 +6,8 @@ import os
 from authroutes import auth
 
 app = Flask(__name__)
-CCORS(app, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
+CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
+
 
 
 

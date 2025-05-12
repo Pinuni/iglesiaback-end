@@ -5,7 +5,8 @@ from flask_cors import CORS
 
 auth = Blueprint('auth', __name__)
 
-CORS(app, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
+CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
+
 
 
 
