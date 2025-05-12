@@ -4,11 +4,7 @@ from datetime import datetime
 from flask_cors import CORS
 
 auth = Blueprint('auth', __name__)
-
 CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
-
-
-
 
 # Conexión a base de datos remota
 def get_connection():
@@ -20,7 +16,9 @@ def get_connection():
         cursorclass=pymysql.cursors.DictCursor
     )
 
-# Registro
+# =====================
+# REGISTRO DE USUARIO
+# =====================
 @auth.route('/registro', methods=['POST'])
 def registrar_usuario():
     username = request.form.get('nombre')
@@ -46,16 +44,16 @@ def registrar_usuario():
                     (username, email, password, datetime.now())
                 )
                 connection.commit()
-                print("Usuario registrado:", email)
+                print("✅ Usuario registrado:", email)
                 return redirect("https://iglesiarefugioquebs.site/login.html")
 
     except Exception as e:
-        import traceback
-        print("Error al registrar:", e)
-        traceback.print_exc()
+        print("🔥 Error al registrar:", e)
         return jsonify({'message': 'Error interno del servidor'}), 500
 
-# Login
+# =================
+# LOGIN DE USUARIO
+# =================
 @auth.route('/login', methods=['POST'])
 def login_usuario():
     email = request.form.get('email')
@@ -66,7 +64,7 @@ def login_usuario():
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
                 user = cursor.fetchone()
-                print(" Usuario encontrado:", user)
+                print("🔎 Usuario encontrado:", user)
 
                 if not user:
                     return jsonify({'message': 'Correo no registrado'}), 400
@@ -74,13 +72,9 @@ def login_usuario():
                 if user['password'] != password:
                     return jsonify({'message': 'Contraseña incorrecta'}), 400
 
-                print("Login exitoso:", email)
+                print("✅ Login exitoso:", email)
                 return redirect("https://iglesiarefugioquebs.site/index.html")
 
     except Exception as e:
-        import traceback
-        print("Error al iniciar sesión:", e)
-        traceback.print_exc()
+        print("🔥 Error al iniciar sesión:", e)
         return jsonify({'message': 'Error interno del servidor'}), 500
-
-
