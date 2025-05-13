@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_file, send_from_directory
+from flask import Flask, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
@@ -13,36 +13,38 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:YyaSmXgtoWMVgJBofm
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# Registro de blueprint
 app.register_blueprint(auth)
 
+# Modelo de ejemplo
 class ContenidoExtra(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     link = db.Column(db.String(200), nullable=False)
 
+# Redirección a tu sitio oficial
+@app.route('/')
+def home():
+    return redirect("https://iglesiarefugioquebs.site")
+
+# Endpoint para archivos (si algún día subes imágenes u otros)
 @app.route('/<filename>')
 def serve_file(filename):
     return send_from_directory('.', filename)
 
-@app.route('/')
-@app.route('/index.html')
-def home():
-    return send_file('index.html')
+# Endpoint para contenido extra
+@app.route('/api/contenidoextra')
+def contenido_extra():
+    extras = ContenidoExtra.query.all()
+    return jsonify([{'name': x.name, 'link': x.link} for x in extras])
 
-@app.route('/login.html')
-def login_page():
-    return send_file('login.html')
-
-@app.route('/registro.html')
-def registro_page():
-    return send_file('registro.html')
-
+# Endpoint para navegación (menú)
 @app.route('/api/navigationmenu')
 def navigation_menu():
     connection = pymysql.connect(
         host="maglev.proxy.rlwy.net",
         user="root",
-        password="TU_CONTRASEÑA",
+        password="YyaSmXgtoWMVgJBofmHVznfteoMihXwb",
         database="railway",
         port=11363,
         cursorclass=pymysql.cursors.DictCursor
@@ -52,38 +54,5 @@ def navigation_menu():
         menu = cursor.fetchall()
     return jsonify(menu)
 
-@app.route('/api/contenidoextra')
-def contenido_extra():
-    extras = ContenidoExtra.query.all()
-    return jsonify([{'name': x.name, 'link': x.link} for x in extras])
-
-# 📦 Función para importar base de datos desde localiglesia.sql
-def importar_sql():
-    connection = pymysql.connect(
-        host="maglev.proxy.rlwy.net",
-        user="root",
-        password="YyaSmXgtoWMVgJBofmHVznfteoMihXwb",
-        database="railway",
-        port=11363,
-        autocommit=True,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-
-    with open("localiglesia.sql", "r", encoding="utf-8") as f:
-        sql_script = f.read()
-
-    with connection.cursor() as cursor:
-        for statement in sql_script.split(";"):
-            statement = statement.strip()
-            if statement:
-                try:
-                    cursor.execute(statement)
-                except Exception as e:
-                    print(f"❌ Error ejecutando: {statement}\n{e}")
-
-    print("✅ Tablas importadas exitosamente.")
-
 if __name__ == '__main__':
-    # ⚠️ Descomenta la siguiente línea solo una vez para importar la base de datos
-    # importar_sql()
     app.run(host="0.0.0.0", port=10000)

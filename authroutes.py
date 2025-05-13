@@ -3,11 +3,11 @@ import pymysql
 from datetime import datetime
 from flask_cors import CORS
 
-# ✅ Definir el blueprint antes de usarlo
+# Crear Blueprint
 auth = Blueprint('auth', __name__)
 CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
 
-# Conexión a base de datosdef get_connection():
+# Conexión a base de datos (Railway)
 def get_connection():
     return pymysql.connect(
         host="maglev.proxy.rlwy.net",
@@ -17,6 +17,7 @@ def get_connection():
         port=11363,
         cursorclass=pymysql.cursors.DictCursor
     )
+
 # REGISTRO
 @auth.route('/registro', methods=['POST'])
 def registrar_usuario():
