@@ -8,6 +8,7 @@ auth = Blueprint('auth', __name__)
 CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
 
 # Conexión a base de datosdef get_connection():
+def get_connection():
     return pymysql.connect(
         host="maglev.proxy.rlwy.net",
         user="root",
@@ -16,8 +17,6 @@ CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}},
         port=11363,
         cursorclass=pymysql.cursors.DictCursor
     )
-
-
 # REGISTRO
 @auth.route('/registro', methods=['POST'])
 def registrar_usuario():
