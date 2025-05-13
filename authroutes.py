@@ -26,11 +26,6 @@ def registrar_usuario():
     password = request.form.get('password')
     confirm_password = request.form.get('confirm_password')
 
-    print("📥 Nombre:", username)
-    print("📥 Email:", email)
-    print("📥 Password:", password)
-    print("📥 Confirm:", confirm_password)
-
     if not all([username, email, password, confirm_password]):
         return jsonify({'message': 'Todos los campos son obligatorios'}), 400
 
@@ -49,9 +44,7 @@ def registrar_usuario():
                     (username, email, password, datetime.now())
                 )
                 connection.commit()
-                print("✅ Usuario registrado:", email)
-                return jsonify({'success': True, 'redirect': 'https://iglesiarefugioquebs.site/login.html'})
-
+                return jsonify({'success': True, 'redirect_url': 'https://iglesiarefugioquebs.site/login.html'})
 
     except Exception as e:
         import traceback
@@ -70,7 +63,6 @@ def login_usuario():
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
                 user = cursor.fetchone()
-                print("🔎 Usuario encontrado:", user)
 
                 if not user:
                     return jsonify({'message': 'Correo no registrado'}), 400
@@ -78,9 +70,7 @@ def login_usuario():
                 if user['password'] != password:
                     return jsonify({'message': 'Contraseña incorrecta'}), 400
 
-                print("✅ Login exitoso:", email)
                 return jsonify({'success': True, 'redirect': 'https://iglesiarefugioquebs.site/index.html'})
-
 
     except Exception as e:
         import traceback
