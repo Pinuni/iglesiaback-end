@@ -50,7 +50,8 @@ def registrar_usuario():
                 )
                 connection.commit()
                 print("✅ Usuario registrado:", email)
-                return redirect("https://iglesiarefugioquebs.site/login.html")
+                return jsonify({'success': True, 'redirect': 'https://iglesiarefugioquebs.site/login.html'})
+
 
     except Exception as e:
         import traceback
@@ -78,7 +79,8 @@ def login_usuario():
                     return jsonify({'message': 'Contraseña incorrecta'}), 400
 
                 print("✅ Login exitoso:", email)
-                return redirect("https://iglesiarefugioquebs.site/index.html")
+                return jsonify({'success': True, 'redirect': 'https://iglesiarefugioquebs.site/index.html'})
+
 
     except Exception as e:
         import traceback
