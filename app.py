@@ -62,7 +62,7 @@ def importar_sql():
     connection = pymysql.connect(
         host="maglev.proxy.rlwy.net",
         user="root",
-        password="TU_CONTRASEÑA",
+        password="YyaSmXgtoWMVgJBofmHVznfteoMihXwb",
         database="railway",
         port=11363,
         autocommit=True,
