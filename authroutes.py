@@ -7,15 +7,16 @@ from flask_cors import CORS
 auth = Blueprint('auth', __name__)
 CORS(auth, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
 
-# Conexión a base de datos
-def get_connection():
+# Conexión a base de datosdef get_connection():
     return pymysql.connect(
-        host="sql201.byetcluster.com",
-        user="iglesiar_ken",
-        password="HijoDeDios1@17",
-        database="iglesiar_localiglesia",
+        host="maglev.proxy.rlwy.net",
+        user="root",
+        password="YyaSmXgtoWMVgJBofmHVznfteoMihXwb",
+        database="railway",
+        port=11363,
         cursorclass=pymysql.cursors.DictCursor
     )
+
 
 # REGISTRO
 @auth.route('/registro', methods=['POST'])
