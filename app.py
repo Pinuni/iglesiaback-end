@@ -7,7 +7,7 @@ from authroutes import auth
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
 
-# Configuración de base de datos (InfinityFree)
+# Configuración de base de datos 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://iglesiar_ken:HijoDeDios1@17@sql201.byetcluster.com/iglesiar_localiglesia'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
