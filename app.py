@@ -5,43 +5,43 @@ import pymysql
 import os
 from authroutes import auth
 
-# Inicializar la app
+# Inicializar la app de Flask
 app = Flask(__name__)
 
-# CORS para frontend de Netlify o dominio personalizado
+# Habilitar CORS para permitir peticiones desde el frontend en Netlify o dominio personalizado
 CORS(app, resources={r"/*": {"origins": ["https://iglesiarefugioquebs.site"]}}, supports_credentials=True)
 
-# Configuración de SQLAlchemy (aunque no estás usando muchos modelos)
+# Configuración de SQLAlchemy (aunque solo estás usando un modelo)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:YyaSmXgtoWMVgJBofmHVznfteoMihXwb@maglev.proxy.rlwy.net:11363/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Registrar Blueprint con rutas de auth (registro/login)
+# Registrar las rutas de autenticación (registro/login)
 app.register_blueprint(auth)
 
-# Modelo de ejemplo para sección "contenido extra"
+# Modelo: contenido extra dinámico para la página
 class ContenidoExtra(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     link = db.Column(db.String(200), nullable=False)
 
-# Redirección al sitio principal
+# Redireccionar a tu página principal al acceder a "/"
 @app.route('/')
 def home():
     return redirect("https://iglesiarefugioquebs.site")
 
-# Ruta para servir archivos (por si cargas imágenes u otros en el futuro)
+# Servir archivos directamente desde el directorio actual (ej: imágenes o PDFs)
 @app.route('/<filename>')
 def serve_file(filename):
     return send_from_directory('.', filename)
 
-# API: Devuelve el contenido extra desde la tabla
+# API: contenido extra (ej: enlaces adicionales dinámicos en el menú)
 @app.route('/api/contenidoextra')
 def contenido_extra():
     extras = ContenidoExtra.query.all()
     return jsonify([{'name': x.name, 'link': x.link} for x in extras])
 
-# API: Devuelve el menú de navegación desde la tabla navigationmenu
+# API: menú de navegación cargado desde base de datos
 @app.route('/api/navigationmenu')
 def navigation_menu():
     connection = pymysql.connect(
@@ -57,6 +57,6 @@ def navigation_menu():
         menu = cursor.fetchall()
     return jsonify(menu)
 
-# Iniciar servidor
+# Iniciar servidor localmente o en plataforma como Render
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=10000)

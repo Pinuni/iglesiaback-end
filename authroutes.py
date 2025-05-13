@@ -35,10 +35,17 @@ def registrar_usuario():
     try:
         with get_connection() as connection:
             with connection.cursor() as cursor:
+                # Verificar si ya existe el correo
                 cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
                 if cursor.fetchone():
-                    return jsonify({'message': 'El usuario ya existe'}), 400
+                    return jsonify({'message': 'El correo ya está registrado'}), 400
 
+                # Verificar si ya existe el username
+                cursor.execute("SELECT * FROM usuarios WHERE username = %s", (username,))
+                if cursor.fetchone():
+                    return jsonify({'message': 'El nombre de usuario ya está en uso'}), 400
+
+                # Insertar usuario nuevo
                 cursor.execute(
                     "INSERT INTO usuarios (username, email, password, created_at) VALUES (%s, %s, %s, %s)",
                     (username, email, password, datetime.now())
