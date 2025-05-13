@@ -77,11 +77,10 @@ def login_usuario():
                 if user['password'] != password:
                     return jsonify({'message': 'Contraseña incorrecta'}), 400
 
-                return redirect("https://iglesiarefugioquebs.site/index.html")
+                # ✅ Aquí está la redirección hacia tu página principal
+                return jsonify({'success': True, 'redirect': 'https://iglesiarefugioquebs.site/'})
 
-                
     except Exception as e:
         import traceback
-        print("🔥 Error al iniciar sesión:", e)
         traceback.print_exc()
         return jsonify({'message': 'Error interno del servidor'}), 500
