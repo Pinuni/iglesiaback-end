@@ -77,8 +77,9 @@ def login_usuario():
                 if user['password'] != password:
                     return jsonify({'message': 'Contraseña incorrecta'}), 400
 
-                return jsonify({'success': True, 'redirect': 'https://iglesiarefugioquebs.site/index.html'})
+                return redirect("https://iglesiarefugioquebs.site/index.html")
 
+                
     except Exception as e:
         import traceback
         print("🔥 Error al iniciar sesión:", e)
